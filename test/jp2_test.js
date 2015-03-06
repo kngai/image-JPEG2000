@@ -4,7 +4,7 @@ var fs = require('fs');
 var vm = require('vm');
 vm.runInThisContext(fs.readFileSync('./dist/jpx.js', 'utf8') + '');
 
-function testJp2Decode(filename) {
+function testJp2Decode(filename, test, lossless) {
     //load jp2 file using
     var jp2FileAsBuffer = fs.readFileSync('./test/data/' + filename + '.jp2');
     var jp2FileAsByteArray = new Uint8Array(jp2FileAsBuffer);
@@ -28,61 +28,67 @@ function testJp2Decode(filename) {
     //compare pixel by pixel
     var numDiff = 0;
     var cumDiff = 0;
+    var maxErr = 0;
     for (var i = 0; i < height * width; i++) {
         if (Math.abs(referenceFileAsByteArray[i] - decodedPixelData[i]) > 0) {
             numDiff++;
-            cumDiff += Math.pow(referenceValue - decodedPixelData[i], 2);
+            cumDiff += Math.pow(referenceFileAsByteArray[i] - decodedPixelData[i], 2);
+            if (Math.abs(referenceFileAsByteArray[i] - decodedPixelData[i]) > maxErr) {
+                maxErr = Math.abs(referenceFileAsByteArray[i] - decodedPixelData[i]);
+            }
         }
     }
+
+    if (numDiff !== 0) {
+        fs.writeFileSync('./test/out_' + filename + '.raw', new Buffer(decodedPixelData));
+    }
+
+    var numSamples = (height * width * componentsCount);
+    test.ok((lossless ? maxErr === 0 : maxErr <= 1), numDiff + ' / ' + numSamples + ' degraded pixels, MSE=' + cumDiff / numSamples + ' Max err= ' + maxErr);
 
     return {
         numDiff: numDiff,
         cumDiff: cumDiff,
+        maxErr: maxErr,
         decodeTime: (endTime - startTime),
-        numSamples: (height * width * componentsCount),
+        numSamples: numSamples,
     }
 
 }
 
 exports.peppers_lossless = function (test) {
-    var result = testJp2Decode('peppers.lossless')
-    test.ok(result.decodeTime < 500, "Decode time is slow (>500ms)");
-    test.ok(result.numDiff === 0, 'Output does not match reference. ' + result.numDiff + ' / ' + result.numSamples + ' degraded pixels. MSE=' + result.cumDiff / result.numSamples);
+    var result = testJp2Decode('peppers.lossless', test, true)
+    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
     test.done();
 };
 
 exports.peppers_10 = function (test) {
-    var result = testJp2Decode('peppers.10')
-    test.ok(result.decodeTime < 500, "Decode time is slow (>500ms)");
-    test.ok(result.numDiff === 0, 'Output does not match reference. ' + result.numDiff + ' / ' + result.numSamples + ' degraded pixels. MSE=' + result.cumDiff / result.numSamples);
+    var result = testJp2Decode('peppers.10', test, false)
+    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
     test.done();
 };
 
 exports.cameraman_lossless = function (test) {
-    var result = testJp2Decode('cameraman.lossless')
-    test.ok(result.decodeTime < 500, "Decode time is slow (>500ms)");
-    test.ok(result.numDiff === 0, 'Output does not match reference. ' + result.numDiff + ' / ' + result.numSamples + ' degraded pixels. MSE=' + result.cumDiff / result.numSamples);
+    var result = testJp2Decode('cameraman.lossless', test, true)
+    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
     test.done();
 };
 
 exports.cameraman_10 = function (test) {
-    var result = testJp2Decode('cameraman.10')
-    test.ok(result.decodeTime < 500, "Decode time is slow (>500ms)");
-    test.ok(result.numDiff === 0, 'Output does not match reference. ' + result.numDiff + ' / ' + result.numSamples + ' degraded pixels. MSE=' + result.cumDiff / result.numSamples);
+    var result = testJp2Decode('cameraman.10', test, false)
+    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
     test.done();
 };
 
 
 exports.subsampling_1 = function (test) {
-    var result = testJp2Decode('subsampling_1')
-    test.ok(result.decodeTime < 500, "Decode time is slow (>500ms)");
-    test.ok(result.numDiff === 0, 'Output does not match reference. ' + result.numDiff + ' / ' + result.numSamples + ' degraded pixels. MSE=' + result.cumDiff / result.numSamples);
+    var result = testJp2Decode('subsampling_1', test, false)
+    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
     test.done();
 };
 
 exports.subsampling_2 = function (test) {
-    var result = testJp2Decode('subsampling_2')
+    var result = testJp2Decode('subsampling_2', test, false)
     test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
-    test.ok(result.numDiff === 0, 'Output does not match reference. ' + result.numDiff + ' / ' + result.numSamples + ' degraded pixels. MSE=' + result.cumDiff / result.numSamples);
     test.done();
 };

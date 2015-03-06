@@ -5,7 +5,7 @@ var vm = require('vm');
 var dicomParser = require('../node_modules/dicom-parser/dist/dicomParser');
 vm.runInThisContext(fs.readFileSync('./dist/jpx.js', 'utf8') + '');
 
-function testDcmDecode(filename) {
+function testDcmDecode(filename, test, lossless) {
     //load dicom file using
     var dicomFileAsBuffer = fs.readFileSync('./test/data/' + filename + '.dcm');
     var dicomFileAsByteArray = new Uint8Array(dicomFileAsBuffer);
@@ -39,25 +39,39 @@ function testDcmDecode(filename) {
     //compare pixel by pixel
     var numDiff = 0;
     var cumDiff = 0;
+    var maxErr = 0;
     for (var i = 0; i < height * width; i++) {
         referenceValue = referenceFileAsBuffer.readInt16LE(i * 2);
         if (Math.abs(referenceValue - decodedPixelData[i]) > 0) {
             numDiff++;
             cumDiff += Math.pow(referenceValue - decodedPixelData[i], 2);
+            if (Math.abs(referenceValue - decodedPixelData[i]) > maxErr) {
+                maxErr = Math.abs(referenceValue - decodedPixelData[i]);
+            }
         }
     }
 
+    if (numDiff !== 0) {
+        var buf = new Buffer(height * width * 2);
+        for (var i = 0; i < height * width; i++) {
+            buf.writeInt16LE(decodedPixelData[i], i * 2);
+        }
+        fs.writeFileSync('./test/out_' + filename + '.raw', buf);
+    }
+
+    var numSamples = (height * width * componentsCount);
+
+    test.ok((lossless ? maxErr === 0 : maxErr <= 1), numDiff + ' / ' + numSamples + ' degraded pixels, MSE=' + cumDiff / numSamples + ' Max err= ' + maxErr);
     return {
         numDiff: numDiff,
         cumDiff: cumDiff,
         decodeTime: (endTime - startTime),
-        numSamples: (height * width * componentsCount),
+        numSamples: numSamples,
     }
 }
 
 exports.dcm_00000 = function (test) {
-    var result = testDcmDecode('000000')
+    var result = testDcmDecode('000000', test, true)
     test.ok(result.decodeTime < 500, "Decode time is slow (>300ms)");
-    test.ok(result.numDiff === 0, 'Output does not match reference. ' + result.numDiff + ' / ' + result.numSamples + ' degraded pixels. MSE=' + result.cumDiff / result.numSamples);
     test.done();
 };
