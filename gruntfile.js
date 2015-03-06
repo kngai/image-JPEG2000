@@ -29,7 +29,7 @@ module.exports = function (grunt) {
 
         jsbeautifier: {
             "default": {
-                src: ['gruntfile.js'],
+                src: ['gruntfile.js', 'test/**/*.js'],
                 options: {
                     js: {
                         jslintHappy: true
@@ -70,6 +70,13 @@ module.exports = function (grunt) {
             }
         },
 
+        nodeunit: {
+            all: ['test/*_test.js'],
+            options: {
+                reporter: 'grunt',
+            }
+        },
+
 
     });
 
@@ -78,11 +85,12 @@ module.exports = function (grunt) {
     grunt.registerTask('prod', ['uglify:prod']);
     grunt.registerTask('beautify', ['jsbeautifier']);
     grunt.registerTask('default', ['jsbeautifier', 'dev', 'prod']);
+    grunt.registerTask('test', ['nodeunit']);
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks("grunt-jsbeautifier");
-
+    grunt.loadNpmTasks('grunt-contrib-nodeunit');
 };
