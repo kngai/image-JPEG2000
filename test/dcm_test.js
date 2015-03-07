@@ -51,7 +51,7 @@ function testDcmDecode(filename, test, lossless) {
         }
     }
 
-    if (numDiff !== 0) {
+    if ((lossless ? maxErr === 0 : maxErr <= 1)) {
         var buf = new Buffer(height * width * 2);
         for (var i = 0; i < height * width; i++) {
             buf.writeInt16LE(decodedPixelData[i], i * 2);

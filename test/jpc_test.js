@@ -6,7 +6,7 @@ vm.runInThisContext(fs.readFileSync('./dist/jpx.js', 'utf8') + '');
 
 function testJp2Decode(filename, test, lossless) {
     //load jp2 file using
-    var jp2FileAsBuffer = fs.readFileSync('./test/data/' + filename + '.jp2');
+    var jp2FileAsBuffer = fs.readFileSync('./test/data/' + filename + '.jpc');
     var jp2FileAsByteArray = new Uint8Array(jp2FileAsBuffer);
 
     //decode JPEG2000 steam
@@ -56,39 +56,8 @@ function testJp2Decode(filename, test, lossless) {
 
 }
 
-exports.peppers_lossless = function (test) {
-    var result = testJp2Decode('peppers.lossless', test, true)
-    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
-    test.done();
-};
-
-exports.peppers_10 = function (test) {
-    var result = testJp2Decode('peppers.10', test, false)
-    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
-    test.done();
-};
-
-exports.cameraman_lossless = function (test) {
-    var result = testJp2Decode('cameraman.lossless', test, true)
-    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
-    test.done();
-};
-
-exports.cameraman_10 = function (test) {
-    var result = testJp2Decode('cameraman.10', test, false)
-    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
-    test.done();
-};
-
-
-exports.subsampling_1 = function (test) {
-    var result = testJp2Decode('subsampling_1', test, false)
-    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
-    test.done();
-};
-
-exports.subsampling_2 = function (test) {
-    var result = testJp2Decode('subsampling_2', test, false)
-    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
+exports.saturn = function (test) {
+    var result = testJp2Decode('saturn', test, true)
+    test.ok(result.decodeTime < 500, "Decode time is slow (>500ms)");
     test.done();
 };
