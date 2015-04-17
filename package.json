@@ -1,6 +1,6 @@
 {
   "name": "image-JPEG2000",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "devDependencies": {
     "dicom-parser": "^0.8.3",
