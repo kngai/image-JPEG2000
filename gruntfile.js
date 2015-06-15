@@ -94,3 +94,13 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-jsbeautifier");
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
 };
+
+// Release process:
+//  1) Update version numbers in package.json and bower.json
+//  2) do a build (needed to update dist versions with correct build number)
+//  3) commit changes
+//      git commit -am "Changes...."
+//  4) tag the commit
+//      git tag -a 0.1.0 -m "Version 0.1.0"
+//  5) push to github
+//      git push origin master --tags
