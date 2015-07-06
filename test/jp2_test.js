@@ -58,37 +58,31 @@ function testJp2Decode(filename, test, lossless) {
 
 exports.peppers_lossless = function (test) {
     var result = testJp2Decode('peppers.lossless', test, true)
-    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
     test.done();
 };
 
 exports.peppers_10 = function (test) {
     var result = testJp2Decode('peppers.10', test, false)
-    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
     test.done();
 };
 
 exports.cameraman_lossless = function (test) {
     var result = testJp2Decode('cameraman.lossless', test, true)
-    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
     test.done();
 };
 
 exports.cameraman_10 = function (test) {
     var result = testJp2Decode('cameraman.10', test, false)
-    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
     test.done();
 };
 
 
 exports.subsampling_1 = function (test) {
     var result = testJp2Decode('subsampling_1', test, false)
-    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
     test.done();
 };
 
 exports.subsampling_2 = function (test) {
     var result = testJp2Decode('subsampling_2', test, false)
-    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
     test.done();
 };

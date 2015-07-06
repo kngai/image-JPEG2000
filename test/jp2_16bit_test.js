@@ -60,6 +60,5 @@ function testJp2Decode(filename, test, lossless) {
 
 exports.navimage = function (test) {
     var result = testJp2Decode('navimage', test, false)
-    test.ok(result.decodeTime < 800, "Decode time is slow (>800ms)");
     test.done();
 };

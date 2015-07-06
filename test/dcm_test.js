@@ -72,6 +72,5 @@ function testDcmDecode(filename, test, lossless) {
 
 exports.dcm_00000 = function (test) {
     var result = testDcmDecode('000000', test, true)
-    test.ok(result.decodeTime < 500, "Decode time is slow (>300ms)");
     test.done();
 };
