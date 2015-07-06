@@ -45,6 +45,7 @@ function testJp2Decode(filename, test, lossless) {
     for (var i = 0; i < height * width; i++) {
         buf.writeUInt16LE(decodedPixelData[i], i * 2);
     }
+    fs.writeFileSync('./test/out_' + filename + '.raw', buf);
 
     var numSamples = (height * width * componentsCount);
 
@@ -58,8 +59,11 @@ function testJp2Decode(filename, test, lossless) {
 }
 
 exports.file_860AE501 = function (test) {
-    debugger;
-    var result = testJp2Decode('860AE501.dcm', test, false)
-        //test.ok(result.decodeTime < 1500, "Decode time is slow (>1500ms)");
+    var result = testJp2Decode('860AE501.dcm', test, true)
+    test.done();
+};
+
+exports.file_lossyhdr = function (test) {
+    var result = testJp2Decode('lossyhdr.dcm', test, false)
     test.done();
 };
