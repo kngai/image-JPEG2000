@@ -21,4 +21,4 @@ grunt
 ```
 
 jpxData: a Uint8 buffer containing the JPEG2000 code-stream.
-pixelData: a Int16 containing the decoded data.
+pixelData: based on whether the codestream is signed or not, either a Int16 or Uint16 buffer containing the decoded data.
