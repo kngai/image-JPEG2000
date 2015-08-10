@@ -27,6 +27,13 @@ module.exports = function (grunt) {
 
         clean: ['dist'],
 
+        version: {
+            // options: {},
+            defaults: {
+                src: ['bower.json']
+            }
+        },
+
         jsbeautifier: {
             "default": {
                 src: ['gruntfile.js', 'test/**/*.js'],
@@ -54,7 +61,9 @@ module.exports = function (grunt) {
 
         uglify: {
             options: {
-                banner: '/*\n <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> \n*/\n'
+                banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+                    '<%= grunt.template.today("yyyy-mm-dd") %> ' +
+                    '| https://github.com/OHIF/image-JPEG2000 */\n'
             },
             prod: {
                 files: {
@@ -65,6 +74,11 @@ module.exports = function (grunt) {
 
         concat: {
             dev: {
+                options: {
+                    banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+                        '<%= grunt.template.today("yyyy-mm-dd") %> ' +
+                        '| https://github.com/OHIF/image-JPEG2000 */\n'
+                },
                 src: ['ext/pdf.js/src/core/jpx.js', 'ext/pdf.js/src/core/arithmetic_decoder.js', 'ext/pdf.js/src/shared/util.js'],
                 dest: 'dist/jpx.js'
             }
@@ -92,11 +106,14 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks("grunt-jsbeautifier");
+    grunt.loadNpmTasks('grunt-version');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
+
 };
 
 // Release process:
 //  1) Update version numbers in package.json and bower.json
+//     grunt version
 //  2) do a build (needed to update dist versions with correct build number)
 //  3) commit changes
 //      git commit -am "Changes...."

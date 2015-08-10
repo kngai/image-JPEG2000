@@ -1,6 +1,6 @@
 {
   "name": "image-JPEG2000",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "devDependencies": {
     "dicom-parser": "^0.8.3",
@@ -11,6 +11,7 @@
     "grunt-contrib-nodeunit": "^0.4.1",
     "grunt-contrib-uglify": "^0.6.0",
     "grunt-jsbeautifier": "^0.2.8",
+    "grunt-version": "^1.0.0",
     "jshint-stylish": "^1.0.0"
   }
 }

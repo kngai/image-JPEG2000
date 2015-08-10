@@ -1,3 +1,4 @@
+/*! image-JPEG2000 - v0.3.0 - 2015-08-10 | https://github.com/OHIF/image-JPEG2000 */
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 /* Copyright 2012 Mozilla Foundation
