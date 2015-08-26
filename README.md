@@ -13,12 +13,5 @@ grunt
 
 ## Usage
 
-```
-  jpxImage.parse(jpxData);
-  var width = jpxImage.width;
-  var height = jpxImage.height;
-  var pixelData = tileComponents.items;
-```
+See src/index.html
 
-jpxData: a Uint8 buffer containing the JPEG2000 code-stream.
-pixelData: based on whether the codestream is signed or not, either a Int16 or Uint16 buffer containing the decoded data.

@@ -91,19 +91,61 @@ module.exports = function (grunt) {
             }
         },
 
+        watch: {
+            serv: {
+                files: ['src/**/*', 'ext/pdf.js/src/core/*'],
+                tasks: ['dev']
+            }
+        },
 
+        connect: {
+            serv: {
+                options: {
+                    port: 8000,
+                    hostname: 'localhost',
+                    base: 'dist'
+                },
+            }
+        },
+
+        copy: {
+            dev: {
+                files: [{
+                    expand: true,
+                    flatten: true,
+                    src: ['src/*.html'],
+                    dest: 'dist/',
+                    filter: 'isFile'
+                }, {
+                    expand: true,
+                    flatten: true,
+                    src: ['ext/pdf.js/src/core/jpx.js', 'ext/pdf.js/src/core/arithmetic_decoder.js', 'ext/pdf.js/src/shared/util.js'],
+                    dest: 'dist/js',
+                    filter: 'isFile'
+                }, {
+                    expand: true,
+                    flatten: true,
+                    src: ['test/data/*.jp2'],
+                    dest: 'dist/test',
+                    filter: 'isFile'
+                }]
+            }
+        }
     });
 
-
-    grunt.registerTask('dev', ['jshint:dev', 'concat:dev']);
+    grunt.registerTask('dev', ['jshint:dev', 'copy:dev', 'concat:dev']);
     grunt.registerTask('prod', ['uglify:prod']);
     grunt.registerTask('beautify', ['jsbeautifier']);
+    grunt.registerTask('serv', ['dev', 'connect:serv', 'watch:serv']);
     grunt.registerTask('default', ['jsbeautifier', 'dev', 'prod']);
     grunt.registerTask('test', ['nodeunit']);
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks("grunt-jsbeautifier");
     grunt.loadNpmTasks('grunt-version');
