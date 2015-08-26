@@ -63,6 +63,11 @@ exports.file_860AE501 = function (test) {
     test.done();
 };
 
+exports.file_unexpectedEOF = function (test) {
+    var result = testJp2Decode('unexpectedEOF', test, true)
+    test.done();
+};
+
 exports.file_lossyhdr = function (test) {
     var result = testJp2Decode('lossyhdr.dcm', test, false)
     test.done();
