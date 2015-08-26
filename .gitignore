@@ -1,2 +1,5 @@
 node_modules/
 test/out_*
+dist/
+!dist/jpx.js
+!dist/jpx.min.js
