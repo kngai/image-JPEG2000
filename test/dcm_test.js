@@ -1,9 +1,7 @@
 // load modules
-global.PDFJS = {};
 var fs = require('fs');
-var vm = require('vm');
 var dicomParser = require('../node_modules/dicom-parser/dist/dicomParser');
-vm.runInThisContext(fs.readFileSync('./dist/jpx.js', 'utf8') + '');
+var Module = require('../dist/js/libopenjpeg.js');
 
 function testDcmDecode(filename, test, lossless) {
     //load dicom file using
@@ -21,16 +19,18 @@ function testDcmDecode(filename, test, lossless) {
     var jpxData = dicomFileAsByteArray.subarray(imageBaseOffset, layer3);
 
     //decode JPEG2000 steam
-    var jpxImage = new global.JpxImage();
     var startTime = Date.now();
-    jpxImage.parse(jpxData);
+    image = Module.opj_decode(jpxData)
+    if (image === undefined) {
+        test.ok(false, 'decoding failed');
+        return;
+    }
+
     var endTime = Date.now();
-    var componentsCount = jpxImage.componentsCount;
-    var tileCount = jpxImage.tiles.length;
-    var tileComponents = jpxImage.tiles[0];
-    var decodedPixelData = tileComponents.items;
-    var height = jpxImage.height;
-    var width = jpxImage.width;
+    var componentsCount = image.nbChannels;
+    var decodedPixelData = image.pixelData;
+    var height = image.sy;
+    var width = image.sx;
     var j2kDecodeTime = (endTime - startTime);
 
     //load reference raw file

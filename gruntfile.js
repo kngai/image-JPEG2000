@@ -56,32 +56,7 @@ module.exports = function (grunt) {
             },
 
             // when this task is run, lint the Gruntfile and all js files in src
-            dev: ['Grunfile.js', 'ext/core/jpx.js']
-        },
-
-        uglify: {
-            options: {
-                banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-                    '<%= grunt.template.today("yyyy-mm-dd") %> ' +
-                    '| https://github.com/OHIF/image-JPEG2000 */\n'
-            },
-            prod: {
-                files: {
-                    'dist/jpx.min.js': ['ext/pdf.js/src/core/jpx.js', 'ext/pdf.js/src/core/arithmetic_decoder.js', 'ext/pdf.js/src/shared/util.js']
-                }
-            }
-        },
-
-        concat: {
-            dev: {
-                options: {
-                    banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-                        '<%= grunt.template.today("yyyy-mm-dd") %> ' +
-                        '| https://github.com/OHIF/image-JPEG2000 */\n'
-                },
-                src: ['ext/pdf.js/src/core/jpx.js', 'ext/pdf.js/src/core/arithmetic_decoder.js', 'ext/pdf.js/src/shared/util.js'],
-                dest: 'dist/jpx.js'
-            }
+            dev: ['Grunfile.js']
         },
 
         nodeunit: {
@@ -119,7 +94,7 @@ module.exports = function (grunt) {
                 }, {
                     expand: true,
                     flatten: true,
-                    src: ['ext/pdf.js/src/core/jpx.js', 'ext/pdf.js/src/core/arithmetic_decoder.js', 'ext/pdf.js/src/shared/util.js'],
+                    src: ['ext/openjpeg/dist/libopenjpeg.js', 'ext/openjpeg/dist/libopenjpeg.js.mem'],
                     dest: 'dist/js',
                     filter: 'isFile'
                 }, {
@@ -129,24 +104,30 @@ module.exports = function (grunt) {
                     dest: 'dist/test',
                     filter: 'isFile'
                 }]
-            }
+            },
+            prod: {
+                files: [{
+                    expand: true,
+                    flatten: true,
+                    src: ['ext/openjpeg/dist/libopenjpeg.js', 'ext/openjpeg/dist/libopenjpeg.js.mem'],
+                    dest: 'dist/',
+                    filter: 'isFile'
+                }]
+            },
         }
     });
 
-    grunt.registerTask('dev', ['jshint:dev', 'copy:dev', 'concat:dev']);
-    grunt.registerTask('prod', ['uglify:prod']);
+    grunt.registerTask('dev', ['jshint:dev', 'copy:dev']);
     grunt.registerTask('beautify', ['jsbeautifier']);
     grunt.registerTask('serv', ['dev', 'connect:serv', 'watch:serv']);
-    grunt.registerTask('default', ['jsbeautifier', 'dev', 'prod']);
-    grunt.registerTask('test', ['nodeunit']);
+    grunt.registerTask('default', ['jsbeautifier', 'copy:prod']);
+    grunt.registerTask('test', ['dev', 'nodeunit']);
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-connect');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks("grunt-jsbeautifier");
     grunt.loadNpmTasks('grunt-version');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');

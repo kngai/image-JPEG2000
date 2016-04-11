@@ -1,8 +1,6 @@
 // load modules
-global.PDFJS = {};
 var fs = require('fs');
-var vm = require('vm');
-vm.runInThisContext(fs.readFileSync('./dist/jpx.js', 'utf8') + '');
+var Module = require('../dist/js/libopenjpeg.js');
 
 function testJp2Decode(filename, test, lossless) {
     //load jp2 file using
@@ -10,16 +8,17 @@ function testJp2Decode(filename, test, lossless) {
     var jp2FileAsByteArray = new Uint8Array(jp2FileAsBuffer);
 
     //decode JPEG2000 steam
-    var jpxImage = new global.JpxImage();
     var startTime = Date.now();
-    jpxImage.parse(jp2FileAsByteArray);
+    image = Module.opj_decode(jp2FileAsByteArray)
     var endTime = Date.now();
-    var componentsCount = jpxImage.componentsCount;
-    var tileCount = jpxImage.tiles.length;
-    var tileComponents = jpxImage.tiles[0];
-    var decodedPixelData = tileComponents.items;
-    var height = jpxImage.height;
-    var width = jpxImage.width;
+    if (image === undefined) {
+        test.ok(false, 'decoding failed');
+        return;
+    }
+    var componentsCount = image.nbChannels;
+    var decodedPixelData = image.pixelData;
+    var height = image.sy;
+    var width = image.sx;
 
     //load reference raw file
     var referenceFileAsBuffer = fs.readFileSync('./test/data/' + filename + '.raw');
@@ -49,7 +48,7 @@ function testJp2Decode(filename, test, lossless) {
 
     var numSamples = (height * width * componentsCount);
 
-    test.ok((lossless ? maxErr === 0 : maxErr <= 1), numDiff + ' / ' + numSamples + ' degraded pixels, MSE=' + cumDiff / numSamples + ' Max err= ' + maxErr);
+    test.ok((lossless ? maxErr === 0 : maxErr <= 2), numDiff + ' / ' + numSamples + ' degraded pixels, MSE=' + cumDiff / numSamples + ' Max err= ' + maxErr);
     return {
         numDiff: numDiff,
         cumDiff: cumDiff,
