@@ -1,5 +1,5 @@
 {
-  "name": "image-JPEG2000",
+  "name": "@kngai/image-jpeg2000",
   "version": "0.3.1",
   "private": true,
   "devDependencies": {
@@ -16,5 +16,30 @@
     "grunt-jsbeautifier": "^0.2.8",
     "grunt-version": "^1.0.0",
     "jshint-stylish": "^1.0.0"
-  }
+  },
+  "description": "Support repository for a fork of Mozilla's PDF.js that adds support for 16 bit signed grayscale JPEG2000 images.",
+  "main": "dist/jpx.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kngai/image-JPEG2000.git"
+  },
+  "keywords": [
+    "image",
+    "jpeg",
+    "jpeg-2000",
+    "javascript",
+    "api"
+  ],
+  "author": "kngai",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kngai/image-JPEG2000/issues"
+  },
+  "homepage": "https://github.com/kngai/image-JPEG2000#readme"
 }
