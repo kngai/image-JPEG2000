@@ -4047,3 +4047,5 @@ function loadJpegStream(id, imageUrl, objs) {
   });
   img.src = imageUrl;
 }
+
+module.exports = JpxImage;
